@@ -1,4 +1,5 @@
-﻿namespace LiteralDigits;
+﻿#nullable disable
+namespace LiteralDigits;
 
 public static class Program
 {
@@ -18,6 +19,11 @@ public static class Program
         System.Console.WriteLine(lineValues.Sum());
     }
 
+    /// <summary>
+    /// Get the value a line has, including literal written digits, as well as single-char digits
+    /// </summary>
+    /// <param name="line">String representing the line</param>
+    /// <returns>The value of the line</returns>
     static int GetLineValue(string line)
     {
         List<Digit> lineDigits = GetDigitDictionary(line);
@@ -28,11 +34,17 @@ public static class Program
         }
         else
         {
-            char firstDigit = findFirstDigit(lineDigits);
-            char lastDigit = findLastDigit(lineDigits);
+            char firstDigit = FindFirstDigit(lineDigits);
+            char lastDigit = FindLastDigit(lineDigits);
             return Convert.ToInt32(Convert.ToString(firstDigit) + Convert.ToString(lastDigit));
         }
     }
+
+    /// <summary>
+    /// Get a list that contains digit class instances that contain first and last index of occourence.
+    /// </summary>
+    /// <param name="line">String representing the line</param>
+    /// <returns>A list of digits representative of the current line</returns>
     static List<Digit> GetDigitDictionary(string line)
     {
         List<Digit> digits = new();
@@ -40,6 +52,11 @@ public static class Program
         return digits;
     }
 
+    /// <summary>
+    /// Build a list with the single-char digits.
+    /// </summary>
+    /// <param name="line">String representing the line</param>
+    /// <returns>A list of Digit class instances that only include the simple digits</returns>
     static List<Digit> GetSimpleDigits(string line)
     {
         List<Digit> digits = new();
@@ -61,6 +78,12 @@ public static class Program
         return digits;
     }
 
+    /// <summary>
+    /// Add literal digits to the given List.
+    /// </summary>
+    /// <param name="line">String representing the line</param>
+    /// <param name="digits">List of digits to merge with literal digits</param>
+    /// <returns>The modified list</returns>
     static List<Digit> AddLiteralDigits(string line, List<Digit> digits)
     {
         List<string> digitWords = new List<string>
@@ -73,11 +96,7 @@ public static class Program
         {
             firstIndicies[i] = line.IndexOf(digitWords[i]);
         }
-        int[] lastIndicies = new int[10];
-        for (int i = 0; i < digitWords.Count; i++)
-        {
-            lastIndicies[i] = line.LastIndexOf(digitWords[i]);
-        }
+
         for (int i = 0; i < firstIndicies.Length; i++)
         {
             int index = firstIndicies[i];
@@ -93,6 +112,12 @@ public static class Program
                 int oldFirstIndex = digits.Where((x) => x.Equals((Convert.ToString(i)[0]))).FirstOrDefault().FirstIndex;
                 digits.Where((x) => x.Equals((Convert.ToString(i)[0]))).FirstOrDefault().FirstIndex = oldFirstIndex > index ? index : oldFirstIndex;
             }
+        }
+
+        int[] lastIndicies = new int[10];
+        for (int i = 0; i < digitWords.Count; i++)
+        {
+            lastIndicies[i] = line.LastIndexOf(digitWords[i]);
         }
 
         for (int i = 0; i < lastIndicies.Length; i++)
@@ -115,7 +140,12 @@ public static class Program
         return digits;
     }
 
-    static char findFirstDigit(List<Digit> digits)
+    /// <summary>
+    /// Find the digit with the lowest first index in a given list of digits.
+    /// </summary>
+    /// <param name="digits">The list to search</param>
+    /// <returns>The char representing the first digit</returns>
+    static char FindFirstDigit(List<Digit> digits)
     {
 
         Digit minDigit = digits[0];
@@ -126,7 +156,12 @@ public static class Program
         return minDigit.Character;
     }
 
-    static char findLastDigit(List<Digit> digits)
+    /// <summary>
+    /// Find the digit with the highest last index in a given list of digits.
+    /// </summary>
+    /// <param name="digits">The list to search</param>
+    /// <returns>The char representing the last digit</returns>
+    static char FindLastDigit(List<Digit> digits)
     {
         Digit maxDigit = digits[0];
         foreach (Digit digit in digits)
